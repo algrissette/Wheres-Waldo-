@@ -1,0 +1,29 @@
+#!/bin/bash   #allows this to be ran as a shell script
+
+puzz=$1 # this allows us to refer to the puzzle page by page
+
+
+for ((x=0; x<=99; x++)); do #this iterates through the 99 puzzle pages
+
+    ./$puzz $x 1>puzzstdout 2>puzzstderr #this runs the puzzle file according to our x value
+
+    stndtout=$(grep -i "waldo" puzzstdout | wc -l) #search standard out for Waldo
+    stndterr=$(grep -i "waldo" puzzstderr | wc -l) #search standard error for waldo
+    fileline=$(grep -i -r "waldo" PuzzleDir | wc -l) #search files for waldo
+    filename=$(find PuzzleDir | grep -i "waldo" | wc -l) #search file names for waldo
+
+    if [[ stndtout -ne 0 || stndterr -ne 0 || fileline -ne 0 || filename \
+								     -ne 0 ]] #if anything doesnt equal 0
+    then
+	echo $1 $x $stndtout $stndterr $fileline $filename;
+    fi #we print all of the ifnormation that we find
+
+    rm -rf PuzzleDir #remove the puzzle directory to avoid confusion
+
+done
+ #close the code
+							
+
+
+
+    
